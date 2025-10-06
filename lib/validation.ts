@@ -1,17 +1,29 @@
-import { z } from "zod"
-
+import { z } from "zod";
 
 export const signupSchema = z.object({
   fullName: z.string().min(3),
   email: z.string().email(),
   universityId: z.coerce.number(),
   universityCard: z.string().refine(val => val?.length > 0, {
-  message: "University Card is required sfsadf",
-}),
+    message: "University Card is required",
+  }),
   password: z.string().min(8),
 });
 
 export const signInSchema = z.object({
-    email: z.string().email(),
-    password: z.string().min(8)
-})
+  email: z.string().email(),
+  password: z.string().min(8),
+});
+
+export const bookSchema = z.object({
+  title: z.string().min(3),
+  description: z.string().trim().min(10).max(1000),
+  author: z.string().trim().min(3).max(100),
+  genre: z.string().trim().min(3).max(100),
+  rating: z.coerce.number().min(1).max(5), // ✅ coerce ensures string -> number
+  totalCopies: z.coerce.number().int().positive().lte(10000), // ✅ coercion keeps types consistent
+  coverUrl: z.string().default(""), // ✅ prevent 'unknown' if missing
+  coverColor: z.string().trim().regex(/^[A-Fa-f0-9]{6}$/).default("000000"), // ✅ default color
+  videoUrl: z.string().default(""),
+  summary: z.string().trim().min(10).max(1000).default(""),
+});

@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+
+@layer components {
+    .admin-container {
+        @apply flex min-h-screen flex-1 flex-col p-5 sm:p-10 w[calc(100%-264px)]
+    }
+
+       .admin-sidebar {
+        @apply sticky left-0 top-0 flex h-dvh flex-col justify-between bg-white px-5 pb-5 pt-10;
+    }
+
+
+}

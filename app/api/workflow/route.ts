@@ -47,15 +47,21 @@ async function sendEmail({ message, email, subject }: { message: string; email: 
         },
     })
 
-    await transporter.sendMail({
-        from: `"My App" <${process.env.GMAIL_USER}>`,
-        to: email,
-        subject,
-        text: message,
-        html: `<p>${message}</p>`,
-    })
+    try {
+        await transporter.sendMail({
+            from: `"My App" <${config.env.GMAIL_USER}>`,
+            to: email,
+            subject,
+            text: message,
+            html: `<p>${message}</p>`,
+        })
+    
+        console.log(`✅ Sent "${message}" email to ${email}`)
+        
+    } catch (error) {
+        console.log(error,"sending Email")
+    }
 
-    console.log(`✅ Sent "${message}" email to ${email}`)
 }
 type UserState = "non-active" | "active"
 
