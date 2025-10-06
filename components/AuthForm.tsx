@@ -1,8 +1,6 @@
-
-
 import { zodResolver } from '@hookform/resolvers/zod'
 import { DefaultValues, FieldValues, Path, SubmitHandler, useForm, UseFormReturn } from 'react-hook-form'
-import React from 'react'
+import React, { useState } from 'react'
 import { z, ZodType } from 'zod'
 import {
     Form,
@@ -35,30 +33,33 @@ const AuthForm = <T extends FieldValues>({
     onSubmit
 }: Props<T>) => {
     const router = useRouter()
+    const [isSubmitting, setIsSubmitting] = useState(false)
     const isSignIn = type === "SIGN_IN"
-    // const form: UseFormReturn<T> = useForm({
-    //     resolver: zodResolver(schema),
-    //     defaultValues: defaultValues as DefaultValues<T>,
-    //     mode: "onSubmit",
-    // })
+    
     const form: UseFormReturn<T> = useForm({
-    resolver: zodResolver(schema as ZodType<T, FieldValues>),
-    defaultValues: defaultValues as DefaultValues<T>,
-    mode: "onSubmit",
-})
-
-
+        resolver: zodResolver(schema as ZodType<T, FieldValues>),
+        defaultValues: defaultValues as DefaultValues<T>,
+        mode: "onSubmit",
+    })
 
     const handleSubmit: SubmitHandler<T> = async (data) => {
-       const result = await onSubmit(data)
+        setIsSubmitting(true)
+        
+        try {
+            const result = await onSubmit(data)
 
-       if (result.success) {
-        toast.success(`${isSignIn ? "You have successfully Signed in" : " You have successfully Signed up"}`);
-
-        router.push("/")
-       } else {
-        toast.error("Something went wrong")
-       }
+            if (result.success) {
+                toast.success(`${isSignIn ? "You have successfully Signed in" : " You have successfully Signed up"}`)
+                router.push("/")
+            } else {
+                toast.error(result.error || "Something went wrong")
+            }
+        } catch (error) {
+            toast.error("An unexpected error occurred")
+            console.error('Form submission error:', error)
+        } finally {
+            setIsSubmitting(false)
+        }
     }
 
     return (
@@ -86,22 +87,48 @@ const AuthForm = <T extends FieldValues>({
                                     </FormLabel>
                                     <FormControl>
                                         {field.name === "universityCard" ? (
-                                            <ImageUpload type='image' accept='image/*' placeholder='Upload your university card' folder='ids' variant="dark" onFileChange={field.onChange}/>
-                                        ): (
-                                            <Input required type={FIELD_TYPES[field.name as keyof typeof FIELD_TYPES]} {...field} className='w-full min-h-14 border-none text-base font-bold  text-white focus-visible:ring-0 focus-visible:shadow-none bg-gray-800'/>
+                                            <ImageUpload 
+                                                type='image' 
+                                                accept='image/*' 
+                                                placeholder='Upload your university card' 
+                                                folder='ids' 
+                                                variant="dark" 
+                                                onFileChange={field.onChange}
+                                            />
+                                        ) : (
+                                            <Input 
+                                                required 
+                                                type={FIELD_TYPES[field.name as keyof typeof FIELD_TYPES]} 
+                                                {...field} 
+                                                className='w-full min-h-14 border-none text-base font-bold text-white focus-visible:ring-0 focus-visible:shadow-none bg-gray-800'
+                                                disabled={isSubmitting}
+                                            />
                                         )}
-                                        
                                     </FormControl>
-
-      
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
                     ))}
 
-                    
-                    <Button type="submit" className='bg-yellow-500 text-white hover:bg-primary inline-flex min-h-14 w-full items-center justify-center rounded-md px-6 py-2 font-bold text-base'>Submit</Button>
+                    <Button 
+                        type="submit" 
+                        disabled={isSubmitting}
+                        className='bg-yellow-500 text-white hover:bg-yellow-600 disabled:bg-yellow-700 disabled:opacity-70 inline-flex min-h-14 w-full items-center justify-center rounded-md px-6 py-2 font-bold text-base transition-all duration-200'
+                    >
+                        {isSubmitting ? (
+                            <div className="flex items-center gap-2">
+                                <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent" />
+                                <span>
+                                    {isSignIn ? "Signing in..." : "Creating account..."}
+                                </span>
+                            </div>
+                        ) : (
+                            <span>
+                                {isSignIn ? "Sign In" : "Sign Up"}
+                            </span>
+                        )}
+                    </Button>
                 </form>
             </Form>
 
