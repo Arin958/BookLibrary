@@ -37,11 +37,12 @@ interface Props {
   placeholder: string;
   folder: string;
   variant: "dark" | "light";
+  value?: string;
 }
 
-const ImageUpload = ({ onFileChange, type, accept, placeholder, folder, variant }: Props) => {
+const ImageUpload = ({ onFileChange, type, accept, placeholder, folder, variant,value }: Props) => {
   const ikUploadRef = useRef(null);
-  const [file, setFile] = useState<{ filePath: string } | null>(null);
+  const [file, setFile] = useState<{ filePath: string } | null>({filePath: value ?? ""});
   const [progress, setProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
 

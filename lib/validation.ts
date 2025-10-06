@@ -23,7 +23,7 @@ export const bookSchema = z.object({
   rating: z.coerce.number().min(1).max(5), // ✅ coerce ensures string -> number
   totalCopies: z.coerce.number().int().positive().lte(10000), // ✅ coercion keeps types consistent
   coverUrl: z.string().default(""), // ✅ prevent 'unknown' if missing
-  coverColor: z.string().trim().regex(/^[A-Fa-f0-9]{6}$/).default("000000"), // ✅ default color
+  coverColor: z.string().trim().regex(/^#[0-9A-F]{6}$/).default("000000"), // ✅ default color
   videoUrl: z.string().default(""),
   summary: z.string().trim().min(10).max(1000).default(""),
 });
