@@ -1,7 +1,12 @@
+"use client"
+
 import { cn } from "@/lib/utils"
 import Image from "next/image"
 import React from "react"
 import BookCoverSvg from "./BookCoverSvg"
+
+import config from "@/lib/config"
+import { IKImage } from "imagekitio-next"
 
 type BookCoverVariant = "extraSmall" | "small" | "medium" | "regular" | "wide"
 
@@ -28,9 +33,9 @@ interface Props {
   showSecondBook?: boolean
 }
 
-const BookCover = ({ 
-  className, 
-  variant = "regular", 
+const BookCover = ({
+  className,
+  variant = "regular",
   coverColor = "#012A4B",
   coverImage = "https://placehold.co/600x400/000000/FFFFFF/png",
   secondBookCoverColor = "#012A4B",
@@ -45,12 +50,12 @@ const BookCover = ({
   return (
     <div className={cn("relative transition-all duration-300", className)}>
 
-        <div className="absolute inset-0 -z-10 rounded-xl bg-gradient-to-tr from-black/10 via-white/5 to-black/10 blur-2xl"></div>
+      <div className="absolute inset-0 -z-10 rounded-xl bg-gradient-to-tr from-black/10 via-white/5 to-black/10 blur-2xl"></div>
       {/* Third Book (Optional, most tilted) */}
       {showThirdBook && (
-        <div 
+        <div
           className={cn("absolute top-0 left-0", variantStyles[variant])}
-          style={{ 
+          style={{
             transform: `translateY(${stackOffset * 2}px) rotate(${fanAngle * 1.5}deg)`,
             zIndex: 5,
             transformOrigin: 'bottom left',
@@ -59,39 +64,45 @@ const BookCover = ({
         >
           <BookCoverSvg coverColor={thirdBookCoverColor} />
           <div className="absolute z-10" style={{ left: '12%', width: "87.5%", height: "88%" }}>
-            <Image
-              src={thirdBookCoverImage}
-              alt="third book cover"
+            <IKImage
+              path={coverImage}
+              urlEndpoint={config.env.imagekit.urlEndpoint}
               fill
+              alt="book cover"
               className="rounded-sm object-fill"
+              loading="lazy"
+              lqip={{ active: true }}
             />
           </div>
         </div>
       )}
 
 
-{showSecondBook && (
-        <div 
+      {showSecondBook && (
+        <div
           className={cn("absolute top-0 left-0", variantStyles[variant])}
-          style={{ 
+          style={{
             transform: `translateY(${stackOffset}px) rotate(${fanAngle}deg)`,
             zIndex: 15,
             transformOrigin: 'bottom left',
             opacity: 0.8
           }}
         >
-          <BookCoverSvg coverColor={secondBookCoverColor} />
+          <BookCoverSvg coverColor={coverColor} />
           <div className="absolute z-20" style={{ left: '12%', width: "87.5%", height: "88%" }}>
-            <Image
-              src={secondBookCoverImage}
-              alt="second book cover"
+            <IKImage
+              path={coverImage}
+              urlEndpoint={config.env.imagekit.urlEndpoint}
               fill
+              alt="book cover"
               className="rounded-sm object-fill"
+              loading="lazy"
+              lqip={{ active: true }}
             />
           </div>
         </div>
-)}
-      
+      )}
+
 
       {/* Second Book (Diagonal/Fan position) */}
       {/* <div 
@@ -114,17 +125,20 @@ const BookCover = ({
       </div> */}
 
       {/* Top Book (Main book positioned normally) */}
-      <div 
+      <div
         className={cn("relative", variantStyles[variant])}
         style={{ zIndex: 20 }}
       >
         <BookCoverSvg coverColor={coverColor} />
         <div className="absolute z-30" style={{ left: '12%', width: "87.5%", height: "88%" }}>
-          <Image
-            src={coverImage}
-            alt="book cover"
+          <IKImage
+            path={coverImage}
+            urlEndpoint={config.env.imagekit.urlEndpoint}
             fill
+            alt="book cover"
             className="rounded-sm object-fill"
+            loading="lazy"
+            lqip={{ active: true }}
           />
         </div>
       </div>

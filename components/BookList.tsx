@@ -8,6 +8,7 @@ interface Props {
 }
 
 const BookList = ({ title, books, containerClassName }: Props) => {
+  if (books.length < 2) return
   return (
     <section className={`space-y-6 ${containerClassName || ""}`}>
       {/* Section Title */}
@@ -16,7 +17,7 @@ const BookList = ({ title, books, containerClassName }: Props) => {
       </h2>
 
       {/* Book Grid */}
-      <ul
+      {<ul
         className="
           grid 
           gap-4 
@@ -31,7 +32,7 @@ const BookList = ({ title, books, containerClassName }: Props) => {
         {books.map((book) => (
           <BookCard key={book.title} {...book} />
         ))}
-      </ul>
+      </ul>}
     </section>
   )
 }

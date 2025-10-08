@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils"
 import Image from "next/image"
 import { Button } from "./ui/button"
 
-const BookCard = ({ id, title, genre, color, cover, isLoanedBook = false }: Book) => {
+const BookCard = ({ id, title, genre, coverColor, coverUrl, isLoanedBook = false }: Book) => {
   return (
     <li
       className={cn(
@@ -13,10 +13,10 @@ const BookCard = ({ id, title, genre, color, cover, isLoanedBook = false }: Book
         isLoanedBook ? "sm:w-60 w-full" : "sm:w-52 w-full"
       )}
     >
-      <Link href={`/book/${id}`} className="flex flex-col items-center p-4">
+      <Link href={`/books/${id}`} className="flex flex-col items-center p-4">
         {/* Book Cover */}
         <div className="relative w-full flex justify-center">
-          <BookCover coverColor={color} coverImage={cover} showSecondBook={false} />
+          <BookCover coverColor={coverColor} coverImage={coverUrl} showSecondBook={false} />
         </div>
 
         {/* Book Info */}

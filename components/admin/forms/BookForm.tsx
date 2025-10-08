@@ -21,14 +21,21 @@ import { Textarea } from '@/components/ui/textarea'
 import ImageUpload from '@/components/ImageUpload'
 import ColorPicker from '../ColorPicker'
 
+import { toast } from 'sonner'
+import { useRouter } from 'next/navigation'
+import { createBook } from '@/lib/admin/action/books'
+
+
 interface Props extends Partial<Book> {
   type?: "create" | "update"
 }
 
 const BookForm = ({
   type,
-  ...book,
+  ...book
 }: Props) => {
+
+  const router = useRouter()
 
 
   // const form: UseFormReturn<T> = useForm({
@@ -58,7 +65,15 @@ const BookForm = ({
 
 
   const handleSubmit = async (values: z.infer<typeof bookSchema>) => {
-    console.log(values)
+    const result = await createBook(values);
+
+    if (result.success) {
+      toast.success(result.message);
+
+      router.push(`/admin/books/${result.data.id}`)
+    } else {
+      toast.error(result.message);
+    }
 
   }
 
@@ -277,5 +292,6 @@ const BookForm = ({
     </div>
   )
 }
+
 
 export default BookForm

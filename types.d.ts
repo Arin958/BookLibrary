@@ -1,5 +1,5 @@
 interface Book {
-    title: string, author: string, genre: string, rating: number, total_copies: number, available_copies: number, description: string, color: string, cover: string, isLoanedBook: boolean
+    id: string, title: string, author: string, genre: string, rating: number, totalCopies: number, description: string, coverColor: string, coverUrl: string, videoUrl: string, summary: string,  createdAt: Date, availableCopies: number
 }
 
 interface AuthCredentials {
@@ -9,4 +9,24 @@ interface AuthCredentials {
     universityId: number;
     universityCard: string
 
+}
+
+
+interface BookParams {
+    title: string;
+    author: string;
+    genre: string;
+    rating: number;
+    coverUrl: string
+    coverColor: string;
+    totalCopies: number
+    summary: string
+    description: string;
+    videoUrl: string
+}
+
+
+interface BorrowBookParams {
+    bookId: string;
+    userId: string
 }
